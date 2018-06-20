@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-docker volume create geth_data
-
 docker service create \
   --name "geth" \
   --mode "global" \
-  --mount "type=volume,source=geth_data,destination=/root/.ethereum" \
+  --mount "type=bind,source=/home/giga/ethereum,target=/root/.ethereum" \
   --detach \
-  ethereum/client-go:v1.8.9 \
+  ethereum/client-go:latest \
   --cache "6096" \
   --rpc \
   --rpcaddr "0.0.0.0" \
   --rpcport "20203" \
-  --lightserv "50"
+  --lightserv "10"
 
 docker service logs -f geth
