@@ -1,0 +1,31 @@
+version: '3'
+  
+volumes:
+  blockchain:
+
+secrets:
+  keystore:
+    external: true
+
+networks:
+  "${project}":
+    external: true
+
+service:
+  "${parity}":
+    image: "parity/parity:${VERSION}"
+    entrypoint:
+      - --base-path=/blockchain
+      - --chain=kovan
+      - --keys-path=/run/secrets/keystore
+      - --no-ui
+      - --jsonrpc-port=27182
+      - --jsonrpc-interface=0.0.0.0 
+      - --jsonrpc-apis=all
+    volumes:
+      - type: mount
+        target: /blockchain
+    secrets:
+      - keystore
+    networks:
+      "${project}"
