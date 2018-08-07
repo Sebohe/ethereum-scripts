@@ -8,12 +8,12 @@ secrets:
     external: true
 
 networks:
-  "${project}":
+  parity: 
     external: true
 
 service:
-  "${parity}":
-    image: "parity/parity:${VERSION}"
+  parity:
+    image: "parity/parity:stable"
     entrypoint:
       - --base-path=/blockchain
       - --chain=kovan
@@ -28,4 +28,4 @@ service:
     secrets:
       - keystore
     networks:
-      "${project}"
+      parity
