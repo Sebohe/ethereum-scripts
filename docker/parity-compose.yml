@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
   
 volumes:
   blockchain:
@@ -7,25 +7,22 @@ secrets:
   keystore:
     external: true
 
-networks:
-  parity: 
-    external: true
-
-service:
-  parity:
+services:
+  core:
     image: "parity/parity:stable"
+    deploy:
+      mode: global
     entrypoint:
+      - /parity/parity
       - --base-path=/blockchain
       - --chain=kovan
-      - --keys-path=/run/secrets/keystore
       - --no-ui
-      - --jsonrpc-port=27182
+      - --jsonrpc-port=27148
       - --jsonrpc-interface=0.0.0.0 
       - --jsonrpc-apis=all
-    volumes:
-      - type: mount
-        target: /blockchain
     secrets:
       - keystore
-    networks:
-      parity
+    volumes:
+      - "blockchain:/blockchain"
+    ports:
+      - "27148:27148"

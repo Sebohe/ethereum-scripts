@@ -2,10 +2,10 @@
 docker service create \
   --name "parity" \
   --mode "global" \
-  --mount "type=bind,source=/home/"$HOME"/ethereum/parity,target=/root/parity" \
+  --mount "type=bind,source=/home/giga/ethereum/parity,target=/root/parity" \
   --detach \
   --publish "31245:31245" \
-  parity/parity:beta \
+  parity/parity:v1.11.4 \
   --jsonrpc-port=31245 \
   --jsonrpc-interface=0.0.0.0 \
   --jsonrpc-apis=all \
