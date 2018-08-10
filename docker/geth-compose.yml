@@ -1,7 +1,8 @@
 version: '3.7'
   
 volumes:
-  geth-blockchain:
+  blockchain:
+  keystore:
 
 secrets:
   keystore:
@@ -12,18 +13,19 @@ services:
     image: "ethereum/client-go:stable"
     deploy:
       mode: global
-    entrypoint:
-      - /usr/local/bingeth
-      - --rinkeby
-      - --rpc
-      - --rpcvalue 0.0.0.0.
-      - --rpcport 9545
-      - --rpcapi all
-      - --datadir "/blockchain"
-      - --keystore "/run/secrets/keystore"
     secrets:
       - keystore
     volumes:
-      - "geth-blockchain:/blockchain"
+      - "blockchain:/blockchain"
     ports:
       - "9545:9545"
+    entrypoint:
+      - geth
+      - --rinkeby
+      - --rpc
+      - --rpcport
+      - "9545"
+      - --rpcaddr
+      - 0.0.0.0
+      - --datadir
+      - /blockchain
