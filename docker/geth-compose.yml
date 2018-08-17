@@ -27,5 +27,9 @@ services:
       - "9545"
       - --rpcaddr
       - 0.0.0.0
+      - --rpcvhosts
+      - "http://sasquatch.network"
       - --datadir
       - /blockchain
+      - --syncmode
+      - fast
