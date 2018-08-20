@@ -28,8 +28,10 @@ services:
       - "9545"
       - --rpcaddr
       - 0.0.0.0
+      - --rpcvhosts
+      - "*"
       - --rpccorsdomain
-      - sasquatch.network
+      - "http://sasquatch.network,https://sasquatch.network"
       - --datadir
       - /blockchain
       - --keystore
