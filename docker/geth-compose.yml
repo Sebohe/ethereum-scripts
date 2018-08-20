@@ -1,8 +1,5 @@
 version: '3.7'
   
-volumes:
-  blockchain:
-
 secrets:
   keystore:
     external: true
@@ -15,12 +12,16 @@ services:
     secrets:
       - keystore
     volumes:
-      - "blockchain:/blockchain"
+      - type: bind
+        source: /mnt/blockchain_ipfs/geth
+        target: /blockchain
     ports:
       - "9545:9545"
     entrypoint:
       - geth
       - --rinkeby
+      - --cache
+      - "10000"
       - --rpc
       - --rpcport
       - "9545"
