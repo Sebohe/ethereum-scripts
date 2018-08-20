@@ -2,7 +2,6 @@ version: '3.7'
   
 volumes:
   blockchain:
-  keystore:
 
 secrets:
   keystore:
@@ -10,7 +9,7 @@ secrets:
 
 services:
   core:
-    image: "ethereum/client-go:stable"
+    image: "sebohe/rinkeby-geth"
     deploy:
       mode: global
     secrets:
@@ -28,8 +27,14 @@ services:
       - --rpcaddr
       - 0.0.0.0
       - --rpcvhosts
-      - "http://sasquatch.network"
+      - http://sasquatch.network
       - --datadir
       - /blockchain
+      - --keystore
+      - /keystore
       - --syncmode
       - fast
+      - --unlock
+      - "0"
+      - --password
+      - /run/secrets/keystore
