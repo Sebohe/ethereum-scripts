@@ -3,7 +3,6 @@ deploy_parity_kovan:
 	docker stack deploy -c docker/parity-compose.yml parity
 
 rinkeby:
-	docker build -f docker/geth.Dockerfile -t sebohe/rinkeby-geth .
 	docker stack deploy -c docker/geth-compose.yml geth
 
 aragon-ipfs-rinkeby:
