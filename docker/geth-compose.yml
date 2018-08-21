@@ -22,7 +22,7 @@ services:
       - geth
       - --rinkeby
       - --cache
-      - "10000"
+      - "8192"
       - --rpc
       - --rpcport
       - "9545"
@@ -38,3 +38,4 @@ services:
       - /keystore
       - --syncmode
       - fast
+      - --v5disc
