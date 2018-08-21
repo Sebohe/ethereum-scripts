@@ -32,6 +32,13 @@ services:
       - "*"
       - --rpccorsdomain
       - "http://sasquatch.network,https://sasquatch.network"
+      - --ws
+      - --wsaddr
+      - 0.0.0.0
+      - --wsport
+      - "9546"
+      - --wsorigins
+      - "http://sasquatch.network,https://sasquatch.network"
       - --datadir
       - /blockchain
       - --keystore
