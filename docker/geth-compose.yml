@@ -1,0 +1,41 @@
+version: '3.7'
+  
+secrets:
+  keystore:
+    external: true
+
+services:
+  core:
+    image: "ethereum/client-go:stable"
+    deploy:
+      mode: global
+    secrets:
+      - keystore
+    volumes:
+      - ./keystore.json:/keystore/keystore.json:ro
+      - type: bind
+        source: /mnt/blockchain_ipfs/geth
+        target: /blockchain
+    ports:
+      - "9545:9545"
+    entrypoint:
+      - geth
+      - --rinkeby
+      - --cache
+      - "8192"
+      - --rpc
+      - --rpcport
+      - "9545"
+      - --rpcaddr
+      - 0.0.0.0
+      - --rpcvhosts
+      - "*"
+      - --rpccorsdomain
+      - "http://sasquatch.network,https://sasquatch.network"
+      - --datadir
+      - /blockchain
+      - --keystore
+      - /keystore
+      - --syncmode
+      - fast
+      - --v5disc

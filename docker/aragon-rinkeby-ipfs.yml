@@ -1,0 +1,49 @@
+version: '3.7'
+  
+volumes:
+  blockchain:
+  keystore:
+
+secrets:
+  keystore:
+    external: true
+
+services:
+  geth:
+    image: "ethereum/client-go:stable"
+    deploy:
+      mode: global
+    secrets:
+      - keystore
+    volumes:
+      - "blockchain:/blockchain"
+    ports:
+      - "9545:9545"
+    entrypoint:
+      - geth
+      - --rinkeby
+      - --rpc
+      - --rpcport
+      - "9545"
+      - --rpcaddr
+      - 0.0.0.0
+      - --rpcvhosts
+      - "http://sasquatch.network"
+      - --datadir
+      - /blockchain
+      - --syncmode
+      - fast
+  ipfs:
+    image: "ipfs/go-ipfs"
+    deploy:
+      mode: replicate
+		ports:
+      - "8082:8080"
+      - "4001:4001"
+      - "5001:5001"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker-entrypoint.sh:/entrypoint.sh:ro
+      - ./data/ipfs/staging:/export
+      - ./data/ipfs/data:/data/ipfs
+    restart: always

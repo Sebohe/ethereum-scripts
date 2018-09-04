@@ -1,0 +1,121 @@
+Changing user to ipfs
+ipfs version 0.4.15
+initializing IPFS node at /data/ipfs
+generating 2048-bit RSA keypair...done
+peer identity: QmYvt52TUZafDY9x21h76bd2itRwpxB444ptaXvrffMN1P
+to get started, enter:
+
+	ipfs cat /ipfs/QmS4ustL54uo8FzR9455qaxZwuMiUhyvMcX9Ba8nUH4uVv/readme
+
+DEPRECATED: arguments have been set but the first argument isn't 'daemon'
+DEPRECATED: run 'docker run ipfs/go-ipfs daemon --help' instead
+DEPRECATED: see the following PRs for more information:
+DEPRECATED: * https://github.com/ipfs/go-ipfs/pull/3573
+DEPRECATED: * https://github.com/ipfs/go-ipfs/pull/3685
+USAGE
+  ipfs daemon - Run a network-connected IPFS node.
+
+SYNOPSIS
+  ipfs daemon [--init] [--init-profile=<init-profile>] [--routing=<routing>] [--mount] [--writable] [--mount-ipfs=<mount-ipfs>] [--mount-ipns=<mount-ipns>] [--unrestricted-api] [--disable-transport-encryption] [--enable-gc] [--manage-fdlimit=false] [--offline] [--migrate] [--enable-pubsub-experiment] [--enable-namesys-pubsub] [--enable-mplex-experiment=false]
+
+OPTIONS
+
+  --init                         bool   - Initialize ipfs with default settings if not already initialized.
+  --init-profile                 string - Configuration profiles to apply for --init. See ipfs init --help for more.
+  --routing                      string - Overrides the routing option. Default: default.
+  --mount                        bool   - Mounts IPFS to the filesystem.
+  --writable                     bool   - Enable writing objects (with POST, PUT and DELETE).
+  --mount-ipfs                   string - Path to the mountpoint for IPFS (if using --mount). Defaults to config setting.
+  --mount-ipns                   string - Path to the mountpoint for IPNS (if using --mount). Defaults to config setting.
+  --unrestricted-api             bool   - Allow API access to unlisted hashes.
+  --disable-transport-encryption bool   - Disable transport encryption (for debugging protocols).
+  --enable-gc                    bool   - Enable automatic periodic repo garbage collection.
+  --manage-fdlimit               bool   - Check and raise file descriptor limits if needed. Default: true.
+  --offline                      bool   - Run offline. Do not connect to the rest of the network but provide local API.
+  --migrate                      bool   - If true, assume yes at the migrate prompt. If false, assume no.
+  --enable-pubsub-experiment     bool   - Instantiate the ipfs daemon with the experimental pubsub feature enabled.
+  --enable-namesys-pubsub        bool   - Enable IPNS record distribution through pubsub; enables pubsub.
+  --enable-mplex-experiment      bool   - Add the experimental 'go-multiplex' stream muxer to libp2p on construction. Default: true.
+
+DESCRIPTION
+
+  The daemon will start listening on ports on the network, which are
+  documented in (and can be modified through) 'ipfs config Addresses'.
+  For example, to change the 'Gateway' port:
+  
+    ipfs config Addresses.Gateway /ip4/127.0.0.1/tcp/8082
+  
+  The API address can be changed the same way:
+  
+    ipfs config Addresses.API /ip4/127.0.0.1/tcp/5002
+  
+  Make sure to restart the daemon after changing addresses.
+  
+  By default, the gateway is only accessible locally. To expose it to
+  other computers in the network, use 0.0.0.0 as the ip address:
+  
+    ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
+  
+  Be careful if you expose the API. It is a security risk, as anyone could
+  control your node remotely. If you need to control the node remotely,
+  make sure to protect the port as you would other services or database
+  (firewall, authenticated proxy, etc).
+  
+  HTTP Headers
+  
+  ipfs supports passing arbitrary headers to the API and Gateway. You can
+  do this by setting headers on the API.HTTPHeaders and Gateway.HTTPHeaders
+  keys:
+  
+    ipfs config --json API.HTTPHeaders.X-Special-Header '["so special :)"]'
+    ipfs config --json Gateway.HTTPHeaders.X-Special-Header '["so special :)"]'
+  
+  Note that the value of the keys is an _array_ of strings. This is because
+  headers can have more than one value, and it is convenient to pass through
+  to other libraries.
+  
+  CORS Headers (for API)
+  
+  You can setup CORS headers the same way:
+  
+    ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["example.com"]'
+    ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "GET", "POST"]'
+    ipfs config --json API.HTTPHeaders.Access-Control-Allow-Credentials '["true"]'
+  
+  Shutdown
+  
+  To shutdown the daemon, send a SIGINT signal to it (e.g. by pressing 'Ctrl-C')
+  or send a SIGTERM signal to it (e.g. with 'kill'). It may take a while for the
+  daemon to shutdown gracefully, but it can be killed forcibly by sending a
+  second signal.
+  
+  IPFS_PATH environment variable
+  
+  ipfs uses a repository in the local file system. By default, the repo is
+  located at ~/.ipfs. To change the repo location, set the $IPFS_PATH
+  environment variable:
+  
+    export IPFS_PATH=/path/to/ipfsrepo
+  
+  Routing
+  
+  IPFS by default will use a DHT for content routing. There is a highly
+  experimental alternative that operates the DHT in a 'client only' mode that
+  can be enabled by running the daemon as:
+  
+    ipfs daemon --routing=dhtclient
+  
+  This will later be transitioned into a config option once it gets out of the
+  'experimental' stage.
+  
+  DEPRECATION NOTICE
+  
+  Previously, ipfs used an environment variable as seen below:
+  
+    export API_ORIGIN="http://localhost:8888/"
+  
+  This is deprecated. It is still honored in this version, but will be removed
+  in a future version, along with this notice. Please move to setting the HTTP
+  Headers.
+
+
