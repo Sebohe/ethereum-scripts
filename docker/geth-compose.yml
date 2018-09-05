@@ -13,11 +13,10 @@ services:
       - keystore
     volumes:
       - ./keystore.json:/keystore/keystore.json:ro
-      - type: bind
-        source: /mnt/blockchain_ipfs/geth
-        target: /blockchain
+      - /mnt/blockchain_ipfs/geth:/blockchain
     ports:
       - "9545:9545"
+      - "9546:9546"
     entrypoint:
       - geth
       - --rinkeby
@@ -38,7 +37,7 @@ services:
       - --wsport
       - "9546"
       - --wsorigins
-      - "http://sasquatch.network,https://sasquatch.network"
+      - "*"
       - --datadir
       - /blockchain
       - --keystore
