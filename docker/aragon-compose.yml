@@ -1,0 +1,52 @@
+version: '3.7'
+  
+secrets:
+  keystore:
+    external: true
+
+services:
+  core:
+    image: "ethereum/client-go:stable"
+    deploy:
+      mode: global
+    secrets:
+      - keystore
+    volumes:
+      - ./keystore.json:/keystore/keystore.json:ro
+      - /mnt/blockchain_ipfs/aragon:/blockchain
+      - ./password:/password
+    ports:
+      - "19545:9545"
+      - "19546:9546"
+    entrypoint:
+      - geth
+      - --rinkeby
+      - --cache
+      - "8192"
+      - --rpc
+      - --rpcport
+      - "9545"
+      - --rpcaddr
+      - 0.0.0.0
+      - --rpcvhosts
+      - "*"
+      - --rpccorsdomain
+      - "http://sasquatch.network,https://sasquatch.network"
+      - --ws
+      - --wsaddr
+      - 0.0.0.0
+      - --wsport
+      - "9546"
+      - --wsorigins
+      - "*"
+      - --datadir
+      - /blockchain
+      - --keystore
+      - /keystore
+      - --syncmode
+      - fast
+      - --v5disc
+      - --unlock
+      - "7e57506cb56d8c862466fc1bd5efdd82a3c9ad41"
+      - --password
+      - /password
