@@ -27,6 +27,8 @@ services:
       - "9545"
       - --rpcaddr
       - 0.0.0.0
+      - --rpcapi
+      - "debug,eth,net,web3,shh"
       - --rpcvhosts
       - "*"
       - --rpccorsdomain
@@ -45,3 +47,4 @@ services:
       - --syncmode
       - fast
       - --v5disc
+      - --vmdebug

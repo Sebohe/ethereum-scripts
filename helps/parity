@@ -1,10 +1,8 @@
-Parity. Ethereum Client.
+Parity Ethereum Client.
 	By Wood/Paronyan/Kotewicz/Drwięga/Volf et al.
-	Copyright 2015, 2016, 2017, 2018 Parity Technologies (UK) Ltd
+	Copyright 2015-2018 Parity Technologies (UK) Ltd.
 
 parity [options]
-parity [options] ui 
-parity [options] dapp <PATH>
 parity [options] daemon <PID-FILE>
 parity [options] account new 
 parity [options] account list 
@@ -23,11 +21,9 @@ parity [options] restore [FILE]
 parity [options] tools hash <FILE>
 parity [options] db kill 
 parity [options] export-hardcoded-sync 
+parity [options] dapp <PATH>
 
 Operating Options:
-    --public-node
-        Start Parity as a public web server. Account storage and transaction signing will be delegated to the UI.
-
     --no-download
         Normally new releases will be downloaded ready for updating. This disables it. Not recommended.
 
@@ -49,7 +45,7 @@ Operating Options:
     --mode=[MODE]
         Set the operating mode. MODE can be one of: last - Uses the last-used mode, active if none; active - Parity
         continuously syncs the chain; passive - Parity syncs initially, then sleeps and wakes regularly to resync; dark
-        - Parity syncs only when the RPC is active; offline - Parity doesn't sync. (default: last)
+        - Parity syncs only when the JSON-RPC is active; offline - Parity doesn't sync. (default: last)
 
     --mode-timeout=[SECS]
         Specify the number of seconds before inactivity timeout occurs when mode is dark or passive (default: 300)
@@ -73,9 +69,9 @@ Operating Options:
         track this executable was released on. (default: current)
 
     --chain=[CHAIN]
-        Specify the blockchain type. CHAIN may be either a JSON chain specification file or olympic, frontier,
-        homestead, mainnet, morden, ropsten, classic, expanse, tobalaba, musicoin, ellaism, easthub, social, testnet,
-        kovan or dev. (default: foundation)
+        Specify the blockchain type. CHAIN may be either a JSON chain specification file or ethereum, classic, poacore,
+        tobalaba, expanse, musicoin, ellaism, easthub, social, olympic, morden, ropsten, kovan, poasokol, testnet, or
+        dev. (default: foundation)
 
     --keys-path=[PATH]
         Specify the path for JSON key files to be found (default: $BASE/keys)
@@ -89,27 +85,27 @@ Operating Options:
     --db-path=[PATH]
         Specify the database directory path
 
-Convenience options:
+Convenience Options:
     --unsafe-expose
         All servers will listen on external interfaces and will be remotely accessible. It's equivalent with setting the
-        following: --{{ws,jsonrpc,ui,ipfs,secret_store,stratum}}-interface=all --*-hosts=all    This option is UNSAFE
-        and should be used with great care!
+        following: --[ws,jsonrpc,ui,ipfs-api,secretstore,stratum,dapps,secretstore-http]-interface=all --*-hosts=all
+        This option is UNSAFE and should be used with great care!
 
     -c, --config=[CONFIG]
         Specify a configuration. CONFIG may be either a configuration file or a preset: dev, insecure, dev-insecure,
         mining, or non-standard-ports. (default: $BASE/config.toml)
 
     --ports-shift=[SHIFT]
-        Add SHIFT to all port numbers Parity is listening on. Includes network port and all servers (RPC, WebSockets,
-        UI, IPFS, SecretStore). (default: 0)
+        Add SHIFT to all port numbers Parity is listening on. Includes network port and all servers (HTTP JSON-RPC,
+        WebSockets JSON-RPC, IPFS, SecretStore). (default: 0)
 
-Account options:
+Account Options:
     --no-hardware-wallets
         Disables hardware wallet support.
 
     --fast-unlock
-        Use drasticly faster unlocking mode. This setting causes raw secrets to be stored unprotected in memory, so use
-        with care.
+        Use drastically faster unlocking mode. This setting causes raw secrets to be stored unprotected in memory, so
+        use with care.
 
     --keys-iterations=[NUM]
         Specify the number of iterations to use when deriving key from the password (bigger is more secure) (default:
@@ -127,7 +123,7 @@ Account options:
         Provide a file containing a password for unlocking an account. Leading and trailing whitespace is trimmed.
         (default: [])
 
-Private transactions options:
+Private Transactions Options:
     --private-tx-enabled
         Enable private transactions.
 
@@ -149,31 +145,11 @@ Private transactions options:
     --private-passwords=[FILE]...
         Provide a file containing passwords for unlocking accounts (signer, private account, validators).
 
-UI options:
-    --force-ui
-        Enable Trusted UI WebSocket endpoint, even when --unlock is in use.
-
-    --no-ui
-        Disable Trusted UI WebSocket endpoint.
-
-    --ui-no-validation
-        Disable Origin and Host headers validation for Trusted UI. WARNING: INSECURE. Used only for development.
-
-    --ui-interface=[IP]
-        Specify the hostname portion of the Trusted UI server, IP should be an interface's IP address, or local.
-        (default: local)
-
-    --ui-hosts=[HOSTS]
-        List of allowed Host header values. This option will validate the Host header sent by the browser, it is
-        additional security against some attack vectors. Special options: "all", "none",. (default: none)
-
+UI Options:
     --ui-path=[PATH]
         Specify directory where Trusted UIs tokens should be stored. (default: $BASE/signer)
 
-    --ui-port=[PORT]
-        Specify the port of Trusted UI server. (default: 8180)
-
-Networking options:
+Networking Options:
     --no-warp
         Disable syncing from the snapshot over the network.
 
@@ -184,7 +160,7 @@ Networking options:
         Connect only to reserved nodes.
 
     --no-ancient-blocks
-        Disable downloading old blocks after snapshot restoration or warp sync.
+        Disable downloading old blocks after snapshot restoration or warp sync. Not recommended.
 
     --no-serve-light
         Disable serving of light peers.
@@ -194,6 +170,10 @@ Networking options:
 
     --port=[PORT]
         Override the port on which the node should listen. (default: 30303)
+
+    --interface=[IP]
+        Network interfaces. Valid values are 'all', 'local' or the ip of the interface you want parity to listen to.
+        (default: all)
 
     --min-peers=[NUM]
         Try to maintain at least NUM peers.
@@ -228,23 +208,23 @@ Networking options:
         Provide a file containing enodes, one per line. These nodes will always have a reserved slot on top of the
         normal maximum peers.
 
-API and console options – RPC:
+API and Console Options – HTTP JSON-RPC:
     --no-jsonrpc
-        Disable the JSON-RPC API server.
+        Disable the HTTP JSON-RPC API server.
 
     --jsonrpc-port=[PORT]
-        Specify the port portion of the JSONRPC API server. (default: 8545)
+        Specify the port portion of the HTTP JSON-RPC API server. (default: 8545)
 
     --jsonrpc-interface=[IP]
-        Specify the hostname portion of the JSONRPC API server, IP should be an interface's IP address, or all (all
-        interfaces) or local. (default: local)
+        Specify the hostname portion of the HTTP JSON-RPC API server, IP should be an interface's IP address, or all
+        (all interfaces) or local. (default: local)
 
     --jsonrpc-apis=[APIS]
-        Specify the APIs available through the JSONRPC interface using a comma-delimited list of API names. Possible
-        names are: all, safe, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub, parity_accounts,
-        parity_set, traces, rpc, secretstore, shh, shh_pubsub. You can also disable a specific API by putting '-' in the
-        front, example: all,-personal. safe contains following apis: web3, net, eth, pubsub, parity, parity_pubsub,
-        traces, rpc, shh, shh_pubsub (default:
+        Specify the APIs available through the HTTP JSON-RPC interface using a comma-delimited list of API names.
+        Possible names are: all, safe, debug, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub,
+        parity_accounts, parity_set, traces, rpc, secretstore, shh, shh_pubsub. You can also disable a specific API by
+        putting '-' in the front, example: all,-personal. 'safe' enables the following APIs: web3, net, eth, pubsub,
+        parity, parity_pubsub, traces, rpc, shh, shh_pubsub (default:
         web3,eth,pubsub,net,parity,private,parity_pubsub,traces,rpc,shh,shh_pubsub)
 
     --jsonrpc-hosts=[HOSTS]
@@ -252,31 +232,34 @@ API and console options – RPC:
         additional security against some attack vectors. Special options: "all", "none",. (default: none)
 
     --jsonrpc-threads=[THREADS]
-        Turn on additional processing threads in all RPC servers. Setting this to non-zero value allows parallel cpu
-        -heavy queries execution. (default: 4)
+        Turn on additional processing threads in all HTTP JSON-RPC servers. Setting this to non-zero value allows
+        parallel execution of cpu-heavy queries. (default: 4)
 
     --jsonrpc-cors=[URL]
-        Specify CORS header for JSON-RPC API responses. Special options: "all", "none". (default: none)
+        Specify CORS header for HTTP JSON-RPC API responses. Special options: "all", "none". (default: none)
 
     --jsonrpc-server-threads=[NUM]
         Enables multiple threads handling incoming connections for HTTP JSON-RPC server.
 
-API and console options – WebSockets:
+    --jsonrpc-max-payload=[MB]
+        Specify maximum size for HTTP JSON-RPC requests in megabytes.
+
+API and Console Options – WebSockets:
     --no-ws
-        Disable the WebSockets server.
+        Disable the WebSockets JSON-RPC server.
 
     --ws-port=[PORT]
-        Specify the port portion of the WebSockets server. (default: 8546)
+        Specify the port portion of the WebSockets JSON-RPC server. (default: 8546)
 
     --ws-interface=[IP]
-        Specify the hostname portion of the WebSockets server, IP should be an interface's IP address, or all (all
-        interfaces) or local. (default: local)
+        Specify the hostname portion of the WebSockets JSON-RPC server, IP should be an interface's IP address, or all
+        (all interfaces) or local. (default: local)
 
     --ws-apis=[APIS]
-        Specify the APIs available through the WebSockets interface using a comma-delimited list of API names. Possible
-        names are: all, safe, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub, parity_accounts,
+        Specify the JSON-RPC APIs available through the WebSockets interface using a comma-delimited list of API names.
+        Possible names are: all, safe, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub, parity_accounts,
         parity_set, traces, rpc, secretstore, shh, shh_pubsub. You can also disable a specific API by putting '-' in the
-        front, example: all,-personal. safe contains following apis: web3, net, eth, pubsub, parity, parity_pubsub,
+        front, example: all,-personal. 'safe' enables the following APIs: web3, net, eth, pubsub, parity, parity_pubsub,
         traces, rpc, shh, shh_pubsub (default:
         web3,eth,pubsub,net,parity,parity_pubsub,private,traces,rpc,shh,shh_pubsub)
 
@@ -289,9 +272,9 @@ API and console options – WebSockets:
         additional security against some attack vectors. Special options: "all", "none". (default: none)
 
     --ws-max-connections=[CONN]
-        Maximal number of allowed concurrent WS connections. (default: 100)
+        Maximum number of allowed concurrent WebSockets JSON-RPC connections. (default: 100)
 
-API and console options – IPC:
+API and Console Options – IPC:
     --no-ipc
         Disable JSON-RPC over IPC service.
 
@@ -302,17 +285,11 @@ API and console options – IPC:
         Specify custom API set available via JSON-RPC over IPC using a comma-delimited list of API names. Possible names
         are: all, safe, web3, net, eth, pubsub, personal, signer, parity, parity_pubsub, parity_accounts, parity_set,
         traces, rpc, secretstore, shh, shh_pubsub. You can also disable a specific API by putting '-' in the front,
-        example: all,-personal. safe contains: web3, net, eth, pubsub, parity, parity_pubsub, traces, rpc, shh,
-        shh_pubsub (default: web3,eth,pubsub,net,parity,parity_pubsub,parity_accounts,private,traces,rpc,shh,shh_pubsub)
+        example: all,-personal. 'safe' enables the following APIs: web3, net, eth, pubsub, parity, parity_pubsub,
+        traces, rpc, shh, shh_pubsub (default:
+        web3,eth,pubsub,net,parity,parity_pubsub,parity_accounts,private,traces,rpc,shh,shh_pubsub)
 
-API and console options – Dapps:
-    --no-dapps
-        Disable the Dapps server (e.g. status page).
-
-    --dapps-path=[PATH]
-        Specify directory where dapps should be installed. (default: $BASE/dapps)
-
-API and console options – IPFS:
+API and Console Options – IPFS:
     --ipfs-api
         Enable IPFS-compatible HTTP API.
 
@@ -330,43 +307,48 @@ API and console options – IPFS:
     --ipfs-api-cors=[URL]
         Specify CORS header for IPFS API responses. Special options: "all", "none". (default: none)
 
-Secret store options:
+Secret Store Options:
     --no-secretstore
         Disable Secret Store functionality.
 
     --no-secretstore-http
         Disable Secret Store HTTP API.
 
-    --no-acl-check
-        Disable ACL check (useful for test environments).
-
     --no-secretstore-auto-migrate
         Do not run servers set change session automatically when servers set changes. This option has no effect when
         servers set is read from configuration file.
 
+    --secretstore-acl-contract=[SOURCE]
+        Secret Store permissioning contract address source: none, registry (contract address is read from
+        'secretstore_acl_checker' entry in registry) or address. (default: registry)
+
     --secretstore-contract=[SOURCE]
-        Secret Store Service contract address source: none, registry (contract address is read from secretstore_service
-        entry in registry) or address. (default: none)
+        Secret Store Service contract address source: none, registry (contract address is read from
+        'secretstore_service' entry in registry) or address.
 
     --secretstore-srv-gen-contract=[SOURCE]
         Secret Store Service server key generation contract address source: none, registry (contract address is read
-        from secretstore_service_srv_gen entry in registry) or address. (default: none)
+        from 'secretstore_service_srv_gen' entry in registry) or address.
 
     --secretstore-srv-retr-contract=[SOURCE]
         Secret Store Service server key retrieval contract address source: none, registry (contract address is read from
-        secretstore_service_srv_retr entry in registry) or address. (default: none)
+        'secretstore_service_srv_retr' entry in registry) or address.
 
     --secretstore-doc-store-contract=[SOURCE]
         Secret Store Service document key store contract address source: none, registry (contract address is read from
-        secretstore_service_doc_store entry in registry) or address. (default: none)
+        'secretstore_service_doc_store' entry in registry) or address.
 
     --secretstore-doc-sretr-contract=[SOURCE]
         Secret Store Service document key shadow retrieval contract address source: none, registry (contract address is
-        read from secretstore_service_doc_sretr entry in registry) or address. (default: none)
+        read from 'secretstore_service_doc_sretr' entry in registry) or address.
 
     --secretstore-nodes=[NODES]
         Comma-separated list of other secret store cluster nodes in form NODE_PUBLIC_KEY_IN_HEX@NODE_IP_ADDR:NODE_PORT.
         (default: )
+
+    --secretstore-server-set-contract=[SOURCE]
+        Secret Store server set contract address source: none, registry (contract address is read from
+        'secretstore_server_set' entry in registry) or address. (default: registry)
 
     --secretstore-interface=[IP]
         Specify the hostname portion for listening to Secret Store Key Server internal requests, IP should be an
@@ -391,7 +373,7 @@ Secret store options:
     --secretstore-admin=[PUBLIC]
         Hex-encoded public key of secret store administrator.
 
-Sealing/Mining options:
+Sealing/Mining Options:
     --force-sealing
         Force the node to author new blocks as if it were always sealing/mining.
 
@@ -403,8 +385,13 @@ Sealing/Mining options:
         speed, but means that extra solutions submitted for the same work package will go unused.
 
     --tx-queue-no-unfamiliar-locals
-        Transactions recieved via local means (RPC, WS, etc) will be treated as external if the sending account is
-        unknown.
+        Local transactions sent through JSON-RPC (HTTP, WebSockets, etc) will be treated as 'external' if the sending
+        account is unknown.
+
+    --tx-queue-no-early-reject
+        Disables transaction queue optimization to early reject transactions below minimal effective gas price. This
+        allows local transactions to always enter the pool, despite it being full, but requires additional ecrecover on
+        every transaction.
 
     --refuse-service-transactions
         Always refuse service transactions.
@@ -454,10 +441,10 @@ Sealing/Mining options:
         string of the form "2 days", "30 minutes" etc.. (default: hourly)
 
     --gas-floor-target=[GAS]
-        Amount of gas per block to target when sealing a new block. (default: 4700000)
+        Amount of gas per block to target when sealing a new block. (default: 8000000)
 
     --gas-cap=[GAS]
-        A cap on how large we will raise the gas limit per block due to transaction volume. (default: 6283184)
+        A cap on how large we will raise the gas limit per block due to transaction volume. (default: 10000000)
 
     --tx-queue-mem-limit=[MB]
         Maximum amount of memory that can be used by the transaction queue. Setting this parameter to 0 disables
@@ -469,10 +456,6 @@ Sealing/Mining options:
     --tx-queue-per-sender=[LIMIT]
         Maximum number of transactions per sender in the queue. By default it's 1% of the entire queue, but not less
         than 16.
-
-    --tx-queue-gas=[LIMIT]
-        Maximum amount of total gas for external transactions in the queue. LIMIT can be either an amount of gas or
-        'auto' or 'off'. 'auto' sets the limit to be 20x the current block gas limit. (default: off)
 
     --tx-queue-strategy=[S]
         Prioritization strategy used to order transactions in the queue. S may be: gas_price - Prioritize txs with high
@@ -490,6 +473,9 @@ Sealing/Mining options:
     --gas-price-percentile=[PCT]
         Set PCT percentile gas price value from last 100 blocks as default gas price when sending transactions.
         (default: 50)
+
+    --poll-lifetime=[S]
+        Set the lifetime of the internal index filter to S seconds. (default: 60)
 
     --author=[ADDRESS]
         Specify the block author (aka "coinbase") address for sending block rewards from sealed blocks. NOTE: MINING
@@ -519,7 +505,7 @@ Internal Options:
     --can-restart
         Executable will auto-restart if exiting with 69
 
-Miscellaneous options:
+Miscellaneous Options:
     --no-color
         Don't use terminal color codes in output.
 
@@ -529,21 +515,14 @@ Miscellaneous options:
     --no-config
         Don't load a configuration file.
 
-    --ntp-servers=[HOSTS]
-        Comma separated list of NTP servers to provide current time (host:port). Used to verify node health. Parity uses
-        pool.ntp.org NTP servers; consider joining the pool: http://www.pool.ntp.org/join.html (default:
-        0.parity.pool.ntp.org:123,1.parity.pool.ntp.org:123,2.parity.pool.ntp.org:123,3.parity.pool.ntp.org:123)
-
     -l, --logging=[LOGGING]
-        Specify the logging level. Must conform to the same format as RUST_LOG.
+        Specify the general logging level (error, warn, info, debug or trace). It can also be set for a specific module,
+        example: '-l sync=debug,rpc=trace'
 
     --log-file=[FILENAME]
         Specify a filename into which logging should be appended.
 
-Footprint options:
-    --fast-and-loose
-        Disables DB WAL, which gives a significant speed up but means an unclean exit is unrecoverable.
-
+Footprint Options:
     --scale-verifiers
         Automatically scale amount of verifier threads based on workload. Not guaranteed to be faster.
 
@@ -568,7 +547,7 @@ Footprint options:
         Override database cache size. (default: 128)
 
     --cache-size-blocks=[MB]
-        Specify the prefered size of the blockchain cache in megabytes. (default: 8)
+        Specify the preferred size of the blockchain cache in megabytes. (default: 8)
 
     --cache-size-queue=[MB]
         Specify the maximum size of memory to use for block queue. (default: 40)
@@ -590,126 +569,22 @@ Footprint options:
     --num-verifiers=[INT]
         Amount of verifier threads to use or to begin with, if verifier auto-scaling is enabled.
 
-Import/export options:
+Import/export Options:
     --no-seal-check
         Skip block seal check.
 
-Snapshot options:
+Snapshot Options:
     --no-periodic-snapshot
         Disable automated snapshots which usually occur once every 10000 blocks.
 
-Whisper options:
+    --snapshot-threads=[NUM]
+        Enables multiple threads for snapshots creation.
+
+Whisper Options:
     --whisper
         Enable the Whisper network.
 
     --whisper-pool-size=[MB]
         Target size of the whisper message pool in megabytes. (default: 10)
-
-Legacy options:
-    --warp
-        Does nothing; warp sync is enabled by default.
-
-    --dapps-apis-all
-        Dapps server is merged with RPC server. Use --jsonrpc-apis.
-
-    --geth
-        Run in Geth-compatibility mode. Sets the IPC path to be the same as Geth's. Overrides the --ipc-path and
-        --ipcpath options. Alters RPCs to reflect Geth bugs. Includes the personal_ RPC by default.
-
-    --testnet
-        Testnet mode. Equivalent to --chain testnet. Overrides the --keys-path option.
-
-    --import-geth-keys
-        Attempt to import keys from Geth client.
-
-    --ipcdisable
-        Equivalent to --no-ipc.
-
-    --ipc-off
-        Equivalent to --no-ipc.
-
-    --nodiscover
-        Equivalent to --no-discovery.
-
-    -j, --jsonrpc
-        Does nothing; JSON-RPC is on by default now.
-
-    --jsonrpc-off
-        Equivalent to --no-jsonrpc.
-
-    -w, --webapp
-        Does nothing; dapps server is on by default now.
-
-    --dapps-off
-        Equivalent to --no-dapps.
-
-    --rpc
-        Does nothing; JSON-RPC is on by default now.
-
-    --dapps-port=[PORT]
-        Dapps server is merged with RPC server. Use --jsonrpc-port.
-
-    --dapps-interface=[IP]
-        Dapps server is merged with RPC server. Use --jsonrpc-interface.
-
-    --dapps-hosts=[HOSTS]
-        Dapps server is merged with RPC server. Use --jsonrpc-hosts.
-
-    --dapps-cors=[URL]
-        Dapps server is merged with RPC server. Use --jsonrpc-cors.
-
-    --dapps-user=[USERNAME]
-        Dapps server authentication has been removed.
-
-    --dapps-pass=[PASSWORD]
-        Dapps server authentication has been removed.
-
-    --datadir=[PATH]
-        Equivalent to --base-path PATH.
-
-    --networkid=[INDEX]
-        Equivalent to --network-id INDEX.
-
-    --peers=[NUM]
-        Equivalent to --min-peers NUM.
-
-    --nodekey=[KEY]
-        Equivalent to --node-key KEY.
-
-    --rpcaddr=[IP]
-        Equivalent to --jsonrpc-interface IP.
-
-    --rpcport=[PORT]
-        Equivalent to --jsonrpc-port PORT.
-
-    --rpcapi=[APIS]
-        Equivalent to --jsonrpc-apis APIS.
-
-    --rpccorsdomain=[URL]
-        Equivalent to --jsonrpc-cors URL.
-
-    --ipcapi=[APIS]
-        Equivalent to --ipc-apis APIS.
-
-    --ipcpath=[PATH]
-        Equivalent to --ipc-path PATH.
-
-    --gasprice=[WEI]
-        Equivalent to --min-gas-price WEI.
-
-    --etherbase=[ADDRESS]
-        Equivalent to --author ADDRESS.
-
-    --extradata=[STRING]
-        Equivalent to --extra-data STRING.
-
-    --cache=[MB]
-        Equivalent to --cache-size MB.
-
-    --tx-queue-ban-count=[C]
-        Not supported. (default: 1)
-
-    --tx-queue-ban-time=[SEC]
-        Not supported. (default: 180)
 
 
