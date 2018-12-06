@@ -12,9 +12,7 @@ services:
     secrets:
       - keystore
     volumes:
-      - ./keystore.json:/keystore/keystore.json:ro
       - /mnt/blockchain_ipfs/aragon:/blockchain
-      - ./password:/password
     ports:
       - "19545:9545"
       - "19546:9546"
@@ -28,6 +26,8 @@ services:
       - "9545"
       - --rpcaddr
       - 0.0.0.0
+      - --rpcapi
+      - "debug,eth,net,txpool,web3"
       - --rpcvhosts
       - "*"
       - --rpccorsdomain
@@ -39,14 +39,10 @@ services:
       - "9546"
       - --wsorigins
       - "*"
+      - --wsapi
+      - "debug,eth,netersonal,txpool,web3"
       - --datadir
       - /blockchain
-      - --keystore
-      - /keystore
       - --syncmode
       - fast
       - --v5disc
-      - --unlock
-      - "7e57506cb56d8c862466fc1bd5efdd82a3c9ad41"
-      - --password
-      - /password
