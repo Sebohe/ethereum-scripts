@@ -5,7 +5,7 @@ secrets:
     external: true
 
 services:
-  core:
+  rinkeby:
     image: "ethereum/client-go:stable"
     deploy:
       mode: global
@@ -38,7 +38,7 @@ services:
       - --wsport
       - "9546"
       - --wsorigins
-      - "*"
+      - "ws://sasquatch.network,*"
       - --wsapi
       - "debug,eth,netersonal,txpool,web3"
       - --datadir

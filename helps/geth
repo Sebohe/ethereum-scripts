@@ -7,7 +7,7 @@ USAGE:
    geth [options] command [command options] [arguments...]
    
 VERSION:
-   1.8.13-stable-225171a4
+   1.8.20-unstable-3ac633ba
    
 COMMANDS:
    account           Manage accounts
@@ -61,6 +61,7 @@ ETHASH OPTIONS:
   --ethash.dagsondisk value        Number of recent ethash mining DAGs to keep on disk (1+GB each) (default: 2)
   
 TRANSACTION POOL OPTIONS:
+  --txpool.locals value        Comma separated accounts to treat as locals (no flush, priority inclusion)
   --txpool.nolocals            Disables price exemptions for locally submitted transactions
   --txpool.journal value       Disk journal for local transaction to survive node restarts (default: "transactions.rlp")
   --txpool.rejournal value     Time interval to regenerate the local transaction journal (default: 1h0m0s)
@@ -74,7 +75,8 @@ TRANSACTION POOL OPTIONS:
   
 PERFORMANCE TUNING OPTIONS:
   --cache value            Megabytes of memory allocated to internal caching (default: 1024)
-  --cache.database value   Percentage of cache memory allowance to use for database io (default: 75)
+  --cache.database value   Percentage of cache memory allowance to use for database io (default: 50)
+  --cache.trie value       Percentage of cache memory allowance to use for trie caching (default: 25)
   --cache.gc value         Percentage of cache memory allowance to use for trie pruning (default: 25)
   --trie-cache-gens value  Number of trie node generations to keep in memory (default: 120)
   
@@ -115,19 +117,25 @@ NETWORKING OPTIONS:
   --nodekeyhex value    P2P node key as hex (for testing)
   
 MINER OPTIONS:
-  --mine                    Enable mining
-  --minerthreads value      Number of CPU threads to use for mining (default: 2)
-  --etherbase value         Public address for block mining rewards (default = first account created) (default: "0")
-  --targetgaslimit value    Target gas limit sets the artificial target gas floor for the blocks to mine (default: 4712388)
-  --gasprice "18000000000"  Minimal gas price to accept for mining a transactions
-  --extradata value         Block extra data set by the miner (default = client version)
+  --mine                         Enable mining
+  --miner.threads value          Number of CPU threads to use for mining (default: 0)
+  --miner.notify value           Comma separated HTTP URL list to notify of new work packages
+  --miner.gasprice "1000000000"  Minimum gas price for mining a transaction
+  --miner.gastarget value        Target gas floor for mined blocks (default: 8000000)
+  --miner.gaslimit value         Target gas ceiling for mined blocks (default: 8000000)
+  --miner.etherbase value        Public address for block mining rewards (default = first account) (default: "0")
+  --miner.extradata value        Block extra data set by the miner (default = client version)
+  --miner.recommit value         Time interval to recreate the block being mined (default: 3s)
+  --miner.noverify               Disable remote sealing verification
   
 GAS PRICE ORACLE OPTIONS:
   --gpoblocks value      Number of recent blocks to check for gas prices (default: 20)
   --gpopercentile value  Suggested gas price is the given percentile of a set of recent transaction gas prices (default: 60)
   
 VIRTUAL MACHINE OPTIONS:
-  --vmdebug  Record information useful for VM and contract debugging
+  --vmdebug         Record information useful for VM and contract debugging
+  --vm.evm value    External EVM configuration (default = built-in interpreter)
+  --vm.ewasm value  External ewasm configuration (default = built-in interpreter)
   
 LOGGING AND DEBUGGING OPTIONS:
   --fakepow                 Disables proof-of-work verification
@@ -157,10 +165,14 @@ WHISPER (EXPERIMENTAL) OPTIONS:
   --shh                       Enable Whisper
   --shh.maxmessagesize value  Max message size accepted (default: 1048576)
   --shh.pow value             Minimum POW accepted (default: 0.2)
+  --shh.restrict-light        Restrict connection between two whisper light clients
   
 DEPRECATED OPTIONS:
-  --fast   Enable fast syncing through state downloads (replaced by --syncmode)
-  --light  Enable light client mode (replaced by --syncmode)
+  --minerthreads value     Number of CPU threads to use for mining (deprecated, use --miner.threads) (default: 0)
+  --targetgaslimit value   Target gas floor for mined blocks (deprecated, use --miner.gastarget) (default: 8000000)
+  --gasprice "1000000000"  Minimum gas price for mining a transaction (deprecated, use --miner.gasprice)
+  --etherbase value        Public address for block mining rewards (default = first account, deprecated, use --miner.etherbase) (default: "0")
+  --extradata value        Block extra data set by the miner (default = client version, deprecated, use --miner.extradata)
   
 MISC OPTIONS:
   --help, -h  show help

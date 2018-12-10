@@ -36,5 +36,3 @@ services:
       - /parity
       - --db-path
       - /blockchain
-      - --keys-path
-      - /keystore

@@ -70,7 +70,7 @@ Operating Options:
 
     --chain=[CHAIN]
         Specify the blockchain type. CHAIN may be either a JSON chain specification file or ethereum, classic, poacore,
-        tobalaba, expanse, musicoin, ellaism, easthub, social, olympic, morden, ropsten, kovan, poasokol, testnet, or
+        tobalaba, expanse, musicoin, ellaism, easthub, social, callisto, morden, ropsten, kovan, poasokol, testnet, or
         dev. (default: foundation)
 
     --keys-path=[PATH]
@@ -116,8 +116,7 @@ Account Options:
         refresh. (default: 5)
 
     --unlock=[ACCOUNTS]
-        Unlock ACCOUNTS for the duration of the execution. ACCOUNTS is a comma-delimited list of addresses. Implies
-        --no-ui.
+        Unlock ACCOUNTS for the duration of the execution. ACCOUNTS is a comma-delimited list of addresses.
 
     --password=[FILE]...
         Provide a file containing a password for unlocking an account. Leading and trailing whitespace is trimmed.
@@ -212,6 +211,9 @@ API and Console Options – HTTP JSON-RPC:
     --no-jsonrpc
         Disable the HTTP JSON-RPC API server.
 
+    --jsonrpc-experimental
+        Enable experimental RPCs. Enable to have access to methods from unfinalised EIPs in all namespaces
+
     --jsonrpc-port=[PORT]
         Specify the port portion of the HTTP JSON-RPC API server. (default: 8545)
 
@@ -232,8 +234,8 @@ API and Console Options – HTTP JSON-RPC:
         additional security against some attack vectors. Special options: "all", "none",. (default: none)
 
     --jsonrpc-threads=[THREADS]
-        Turn on additional processing threads in all HTTP JSON-RPC servers. Setting this to non-zero value allows
-        parallel execution of cpu-heavy queries. (default: 4)
+        Turn on additional processing threads for JSON-RPC servers (all transports). Setting this to a non-zero value
+        allows parallel execution of cpu-heavy queries. (default: 4)
 
     --jsonrpc-cors=[URL]
         Specify CORS header for HTTP JSON-RPC API responses. Special options: "all", "none". (default: none)
@@ -306,6 +308,13 @@ API and Console Options – IPFS:
 
     --ipfs-api-cors=[URL]
         Specify CORS header for IPFS API responses. Special options: "all", "none". (default: none)
+
+Light Client Options:
+    --on-demand-retry-count=[RETRIES]
+        Specify the query retry count.
+
+    --on-demand-inactive-time-limit=[MS]
+        Specify light client query inactive time limit. O for no limit.
 
 Secret Store Options:
     --no-secretstore
@@ -500,6 +509,9 @@ Sealing/Mining Options:
 
     --stratum-secret=[STRING]
         Secret for authorizing Stratum server for peers.
+
+    --max-round-blocks-to-import=[S]
+        Maximal number of blocks to import for each import round. (default: 12)
 
 Internal Options:
     --can-restart
