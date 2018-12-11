@@ -5,6 +5,9 @@ rinkeby:
 kovan:
 	docker stack deploy -c docker/parity-compose.yml kovan
 
+main:
+	docker stack deploy -c docker/mainnet-compose.yml eth 
+
 aragon:
 	docker stack deploy -c docker/aragon-compose.yml aragon
 

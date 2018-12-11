@@ -1,23 +1,17 @@
 version: '3.7'
-  
-secrets:
-  keystore:
-    external: true
 
 services:
-  core:
+  geth:
     image: "ethereum/client-go:stable"
     deploy:
       mode: global
     volumes:
-      - /mnt/blockchain_ipfs/geth:/blockchain
+      - /mnt/blockchain_ipfs/mainnet/geth:/blockchain
     ports:
-      - "9545:9545"
-      - "9546:9546"
+      - "29545:9545"
+      - "29546:9546"
     entrypoint:
       - geth
-      - --cache
-      - "8192"
       - --rpc
       - --rpcport
       - "9545"
@@ -42,41 +36,28 @@ services:
       - fast
       - --v5disc
       - --vmdebug
-version: '3.7'
-  
-secrets:
-  keystore:
-    external: true
-
-services:
-  core:
-    image: "parity/parity:beta"
+  parity:
+    image: "parity/parity:stable"
     deploy:
       mode: global
-    secrets:
-      - keystore
     volumes:
-      - ./keystore.json:/keystore/keystore.json:ro
-      - ./password:/password:ro
-      - /mnt/blockchain_ipfs/parity:/blockchain
+      - /mnt/blockchain_ipfs/mainnet/parity:/blockchain
     ports:
-      - "10545:9545"
-      - "10546:9546"
+      - "39545:9545"
+      - "39546:9546"
     entrypoint:
-      - parity 
-      - --chain
-      - kovan
-      - --cache-size
-      - "8192"
+      - parity
       - --jsonrpc-port
       - "9545"
       - --jsonrpc-interface
       - 0.0.0.0
       - --jsonrpc-apis
-      - "debug,eth,net,web3,shh,personal"
+      - "debug,eth,net,web3"
       - --jsonrpc-cors
       - "http://sasquatch.network,https://sasquatch.network"
-      - --base-path
-      - /parity
-      - --db-path
-      - /blockchain
+      - --ws-interface
+      - 0.0.0.0
+      - --ws-port
+      - "9546"
+      - --ws-apis
+      - "debug,web3,eth,net"

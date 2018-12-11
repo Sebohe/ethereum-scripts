@@ -40,7 +40,7 @@ services:
       - --wsorigins
       - "ws://sasquatch.network,*"
       - --wsapi
-      - "debug,eth,netersonal,txpool,web3"
+      - "debug,eth,net,txpool,web3"
       - --datadir
       - /blockchain
       - --syncmode
