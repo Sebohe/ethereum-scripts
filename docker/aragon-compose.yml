@@ -1,16 +1,10 @@
 version: '3.7'
   
-secrets:
-  keystore:
-    external: true
-
 services:
   rinkeby:
     image: "ethereum/client-go:stable"
     deploy:
       mode: global
-    secrets:
-      - keystore
     volumes:
       - /mnt/blockchain_ipfs/aragon:/blockchain
     ports:
