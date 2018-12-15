@@ -1,44 +1,30 @@
 version: '3.7'
   
-secrets:
-  keystore:
-    external: true
-
 services:
-  core:
+  rinkeby:
     image: "ethereum/client-go:stable"
     deploy:
       mode: global
     volumes:
-      - /mnt/blockchain_ipfs/geth:/blockchain
+      - /mnt/geth:/blockchain
     ports:
-      - "9545:9545"
-      - "9546:9546"
+      - "19545:9545"
+      - "19546:9546"
     entrypoint:
       - geth
-      - --cache
-      - "8192"
+      - --rinkeby
+      - --cache=4096
       - --rpc
-      - --rpcport
-      - "9545"
-      - --rpcaddr
-      - 0.0.0.0
-      - --rpcapi
-      - "debug,eth,net,web3"
-      - --rpcvhosts
-      - "*"
-      - --rpccorsdomain
-      - "http://sasquatch.network,https://sasquatch.network"
+      - --rpcport=9545
+      - --rpcaddr=0.0.0.0
+      - --rpcapi=safe
+      - --rpcvhosts=*
+      - --rpccorsdomain=*
       - --ws
-      - --wsaddr
-      - 0.0.0.0
-      - --wsport
-      - "9546"
-      - --wsorigins
-      - "*"
-      - --datadir
-      - /blockchain
-      - --syncmode
-      - fast
+      - --wsaddr=0.0.0.0
+      - --wsport=9546
+      - --wsorigins=*
+      - --wsapi=*
+      - --datadir=/blockchain
       - --v5disc
-      - --vmdebug
+      - --ipcdisable

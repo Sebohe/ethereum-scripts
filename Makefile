@@ -1,5 +1,12 @@
 
-rinkeby:
+
+pullGeth:
+	docker pull ethereum/client-go:stable
+
+pullParity:
+	docker pull parity/parity:stable
+
+rinkeby pullGeth:
 	docker stack deploy -c docker/geth-compose.yml geth
 
 kovan:
