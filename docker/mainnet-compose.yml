@@ -1,63 +1,29 @@
 version: '3.7'
 
 services:
-  geth:
-    image: "ethereum/client-go:stable"
-    deploy:
-      mode: global
-    volumes:
-      - /mnt/blockchain_ipfs/mainnet/geth:/blockchain
-    ports:
-      - "29545:9545"
-      - "29546:9546"
-    entrypoint:
-      - geth
-      - --rpc
-      - --rpcport
-      - "9545"
-      - --rpcaddr
-      - 0.0.0.0
-      - --rpcapi
-      - "debug,eth,net,web3"
-      - --rpcvhosts
-      - "*"
-      - --rpccorsdomain
-      - "http://sasquatch.network,https://sasquatch.network"
-      - --ws
-      - --wsaddr
-      - 0.0.0.0
-      - --wsport
-      - "9546"
-      - --wsorigins
-      - "*"
-      - --datadir
-      - /blockchain
-      - --syncmode
-      - fast
-      - --v5disc
-      - --vmdebug
-  parity:
+  mainnet:
     image: "parity/parity:stable"
     deploy:
       mode: global
     volumes:
-      - /mnt/blockchain_ipfs/mainnet/parity:/blockchain
+      - ~/blockchain:/blockchain
     ports:
       - "39545:9545"
       - "39546:9546"
     entrypoint:
       - parity
-      - --jsonrpc-port
-      - "9545"
-      - --jsonrpc-interface
-      - 0.0.0.0
-      - --jsonrpc-apis
-      - "debug,eth,net,web3"
-      - --jsonrpc-cors
-      - "http://sasquatch.network,https://sasquatch.network"
-      - --ws-interface
-      - 0.0.0.0
-      - --ws-port
-      - "9546"
-      - --ws-apis
-      - "debug,web3,eth,net"
+      - --jsonrpc-port=9545
+      - --jsonrpc-interface=all
+      - --jsonrpc-hosts=all
+      - --jsonrpc-apis=safe
+      - --jsonrpc-cors=all
+      - --ws-port=9546
+      - --ws-interface=all
+      - --ws-apis=safe
+      - --ws-origins=all
+      - --ws-hosts=all
+      - --auto-update=all
+      - --cache-size=4096
+      - --no-secretstore
+      - --no-hardware-wallets
+      - --no-ipc

@@ -6,16 +6,16 @@ pullGeth:
 pullParity:
 	docker pull parity/parity:stable
 
-rinkeby pullGeth:
+rinkeby: pullGeth
 	docker stack deploy -c docker/geth-compose.yml geth
 
-kovan:
+kovan: pullParity
 	docker stack deploy -c docker/parity-compose.yml kovan
 
-main:
-	docker stack deploy -c docker/mainnet-compose.yml eth 
+main: pullParity
+	docker stack deploy -c docker/mainnet-compose.yml parity
 
-aragon:
+aragon: pullGeth
 	docker stack deploy -c docker/aragon-compose.yml aragon
 
 ipfs:
