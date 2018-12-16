@@ -27,3 +27,4 @@ services:
       - --no-secretstore
       - --no-hardware-wallets
       - --no-ipc
+      - --db-path=/blockchain
