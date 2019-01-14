@@ -11,7 +11,7 @@ services:
       - "39545:9545"
       - "39546:9546"
     entrypoint:
-      - parity
+      - /home/parity/bin/parity
       - --jsonrpc-port=9545
       - --jsonrpc-interface=all
       - --jsonrpc-hosts=all

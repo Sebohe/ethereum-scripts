@@ -6,6 +6,9 @@ pullGeth:
 pullParity:
 	docker pull parity/parity:stable
 
+pullIPFS:
+	docker pull ipfs/go-ipfs:v0.4.18
+
 rinkeby: pullGeth
 	docker stack deploy -c docker/geth-compose.yml geth
 
@@ -18,5 +21,5 @@ main: pullParity
 aragon: pullGeth
 	docker stack deploy -c docker/aragon-compose.yml aragon
 
-ipfs:
+ipfs: pullIPFS
 	docker stack deploy -c docker/ipfs.yml ipfs
