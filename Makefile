@@ -1,3 +1,4 @@
+gethVersion=v1.9.8
 
 
 pullGeth:
@@ -23,3 +24,10 @@ aragon: pullGeth
 
 ipfs: pullIPFS
 	docker stack deploy -c docker/ipfs.yml ipfs
+
+eth-testnets:
+	sed -i 's|%%GETH_VERSION%%|$(gethVersion)|g' ./ops/geth.Dockerfile
+	docker build -f ./docker/geth.Dockerfile -t sebohe/client-go:$(gethVersion) .
+	sed -i 's|$(gethVersion)|%%GETH_VERSION%%|g' ./ops/geth.Dockerfile
+	GETH_VERSION=$(gethVersion) \
+		docker stack deploy testners -f docker/ethereums-testnets.yml -d

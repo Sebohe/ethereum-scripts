@@ -1,0 +1,25 @@
+version: "3"
+
+
+volume:
+  rinkeby:
+  goerli:
+
+services:
+  goerli:
+    image: sebohe/client-go:${GETH_VERSION}
+    environment:
+      - "CHAIN=goerli"
+    ports:
+      - "127.0.0.1:19545:9545"
+    volumes:
+      - goerli:/blockchain
+
+  rinkeby:
+    image: sebohe/client-go:${GETH_VERSION}
+    environment:
+      - "CHAIN=rinkeby"
+    ports:
+      - "127.0.0.1:19546:9545"
+    volumes:
+      - rinkeby:/blockchain
