@@ -1,0 +1,60 @@
+version: "3.7"
+
+volumes:
+  rinkeby:
+  goerli:
+  letsencrypt:
+
+configs:
+  nginx:
+    file: ./nginx/nginx.conf
+
+services:
+  goerli:
+    image: ${GETH_IMAGE}
+    entrypoint:
+      - geth
+      - --goerli
+      - --nousb
+      - --datadir=/blockchain
+      - --syncmode=fast
+      - --rpc
+      - --rpcport=8545
+      - --rpcaddr=0.0.0.0
+      - --rpcapi=eth,net,web3
+      - --rpcvhosts=goerli.${DOMAIN_URL}
+    volumes:
+      - goerli:/blockchain
+
+  rinkeby:
+    image: ${GETH_IMAGE}
+    entrypoint:
+      - geth
+      - --rinkeby
+      - --nousb
+      - --datadir=/blockchain
+      - --syncmode=fast
+      - --rpc
+      - --rpcport=8545
+      - --rpcaddr=0.0.0.0
+      - --rpcapi=eth,net,web3
+      - --rpcvhosts=rinkeby.${DOMAIN_URL}
+    volumes:
+      - rinkeby:/blockchain
+
+  nginx:
+    image: ${NGINX_IMAGE}
+    deploy:
+      mode: global
+    environment:
+      DOMAIN_URL: ${DOMAIN_URL}
+      SUBDOMAINS: "goerli rinkeby"
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+    configs:
+      - source: nginx
+        target: /etc/nginx.conf
+

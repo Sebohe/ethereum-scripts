@@ -1,33 +1,37 @@
 gethVersion=v1.9.8
+nginx=sebohe/nginx-eth:latest
+project=testnets
 
+flags=.makeFlags
+VPATH=$(flags)
+$(shell mkdir -p $(flags))
 
-pullGeth:
-	docker pull ethereum/client-go:stable
+default: deploy
 
-pullParity:
-	docker pull parity/parity:stable
+clean:
+	rm -rf $(flags)
 
-pullIPFS:
-	docker pull ipfs/go-ipfs:v0.4.18
+nginx:
+	docker build -f ops/nginx/Dockerfile -t $(nginx) ./ops/nginx
 
-rinkeby: pullGeth
-	docker stack deploy -c docker/geth-compose.yml geth
+geth:
+	docker pull ethereum/client-go:$(gethVersion)
+	touch $(flags)/$@
 
-kovan: pullParity
-	docker stack deploy -c docker/parity-compose.yml kovan
+deploy: nginx geth
+	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
+	DOMAIN_URL="sebas.tech" \
+	NGINX_IMAGE=$(nginx) \
+	docker stack deploy -c ops/ethereums-testnets.yml $(project)
 
-main: pullParity
-	docker stack deploy -c docker/mainnet-compose.yml parity
+down:
+	docker stack rm $(project)
+	docker stack rm dev_$(project)
+	while [ -n "`docker network ls --quiet --filter label=com.docker.stack.namespace=$(project)`" ]; do echo -n '.' && sleep 1; done
+	@echo
+	while [ -n "`docker network ls --quiet --filter label=com.docker.stack.namespace=dev_$(project)`" ]; do echo -n '.' && sleep 1; done
+	@echo  "MAKE: Done with $@"
+	@echo
 
-aragon: pullGeth
-	docker stack deploy -c docker/aragon-compose.yml aragon
-
-ipfs: pullIPFS
-	docker stack deploy -c docker/ipfs.yml ipfs
-
-eth-testnets:
-	sed -i 's|%%GETH_VERSION%%|$(gethVersion)|g' ./ops/geth.Dockerfile
-	docker build -f ./docker/geth.Dockerfile -t sebohe/client-go:$(gethVersion) .
-	sed -i 's|$(gethVersion)|%%GETH_VERSION%%|g' ./ops/geth.Dockerfile
-	GETH_VERSION=$(gethVersion) \
-		docker stack deploy testners -f docker/ethereums-testnets.yml -d
+r:
+	make down && make
