@@ -48,7 +48,8 @@ services:
       mode: global
     environment:
       DOMAIN_URL: ${DOMAIN_URL}
-      SUBDOMAINS: "goerli rinkeby"
+      SUBDOMAINS: ${SUBDOMAINS}
+      EMAIL: ${CERTBOT_EMAIL}
     ports:
       - "443:443"
       - "80:80"

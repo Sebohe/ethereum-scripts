@@ -18,10 +18,23 @@ geth:
 	docker pull ethereum/client-go:$(gethVersion)
 	touch $(flags)/$@
 
-deploy: nginx geth
+setup:
+	@read -p 'Domain to register: ' bridge; \
+		echo "DOMAIN_URL="$$bridge > config
+	@read -p 'Subdomains to register sperate by a space. Specify atleast one: ' email; \
+		echo "SUBDOMAINS="$$email >> config
+	@read -p 'Email for SSL certificate (default noreply@gmail.com): ' email; \
+		echo "CERTBOT_EMAIL="$$email >> config
+	@touch $(flags)/$@
+	@echo "MAKE: Done with $@"
+	@echo
+
+deploy: setup nginx geth
 	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
-	DOMAIN_URL="sebas.tech" \
 	NGINX_IMAGE=$(nginx) \
+	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
+	EMAIL=$(shell cat config | grep CERTBOT_EMAIL | cut -f2 -d=) \
+	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
 	docker stack deploy -c ops/ethereums-testnets.yml $(project)
 
 down:
