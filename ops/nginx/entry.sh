@@ -29,6 +29,7 @@ fi
 
 for sub in $subdomains; do
   echo "SUB: $sub"
+  sub=$(echo $sub | cut -d':' -f 1)
   if [[ ! -f "$letsencrypt/$sub.$domain/privkey.pem" ]]
   then
     echo "Couldn't find certs for $sub.$domain, using certbot to initialize those now.."

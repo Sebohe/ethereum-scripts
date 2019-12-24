@@ -15,10 +15,6 @@ services:
       - --pprof 
       - --pprofaddr=0.0.0.0
 
-  nginx:
-    environment:
-      - SUBDOMAINS=goerli:8545 rinkeby:84545 grafana:3000
-
   prometheus:
     image: prom/prometheus
     depends_on:
