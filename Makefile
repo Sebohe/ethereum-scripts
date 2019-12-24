@@ -18,7 +18,7 @@ geth:
 	docker pull ethereum/client-go:$(gethVersion)
 	touch $(flags)/$@
 
-setup:
+config:
 	@read -p 'Domain to register: ' bridge; \
 		echo "DOMAIN_URL="$$bridge > config
 	@read -p 'Subdomains to register sperate by a space. Specify atleast one: ' email; \
@@ -29,7 +29,7 @@ setup:
 	@echo "MAKE: Done with $@"
 	@echo
 
-deploy: setup nginx geth
+deploy: config nginx geth
 	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
 	NGINX_IMAGE=$(nginx) \
 	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
@@ -37,7 +37,7 @@ deploy: setup nginx geth
 	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
 	docker stack deploy -c ops/ethereums-testnets.yml $(project)
 
-monitoring-up: setup nginx geth
+monitoring-up: config nginx geth
 	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
 	NGINX_IMAGE=$(nginx) \
 	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
@@ -46,7 +46,6 @@ monitoring-up: setup nginx geth
 	docker stack deploy \
 	-c ops/ethereums-testnets.yml \
 	-c ops/testnets-minitoring.yml $(project)
-
 
 down:
 	docker stack rm $(project)
