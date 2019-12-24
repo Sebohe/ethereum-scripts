@@ -37,6 +37,17 @@ deploy: setup nginx geth
 	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
 	docker stack deploy -c ops/ethereums-testnets.yml $(project)
 
+monitoring-up: setup nginx geth
+	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
+	NGINX_IMAGE=$(nginx) \
+	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
+	EMAIL=$(shell cat config | grep CERTBOT_EMAIL | cut -f2 -d=) \
+	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
+	docker stack deploy \
+	-c ops/ethereums-testnets.yml \
+	-c ops/testnets-minitoring.yml $(project)
+
+
 down:
 	docker stack rm $(project)
 	docker stack rm dev_$(project)

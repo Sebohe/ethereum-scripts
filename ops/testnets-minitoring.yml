@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  goerli:
+    entrypoint:
+      - --metrics 
+      - --metrics.expensive
+      - --pprof 
+      - --pprofaddr=0.0.0.0
+
+  rinkeby:
+    entrypoint:
+      - --metrics 
+      - --metrics.expensive
+      - --pprof 
+      - --pprofaddr=0.0.0.0
+
+  nginx:
+    environment:
+      - SUBDOMAINS=goerli:8545 rinkeby:84545 grafana:3000
+
+  prometheus:
+    image: prom/prometheus
+    depends_on:
+      - goerli
+      - rinkeby
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    volumes:
+      - ./datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml

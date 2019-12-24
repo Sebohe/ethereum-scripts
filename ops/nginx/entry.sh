@@ -42,8 +42,9 @@ for sub in $subdomains; do
   fi
 done
 
-for sub in $subdomains; do
-  DEFAULT_PORT=8545
+for subdomain in $subdomains; do
+  sub=$(echo $subdomain | cut -d':' -f 1)
+  port=$(echo $subdomain | cut -d':' -f 2)
   cat - > "${servers}/${sub}.conf" <<EOF
 server {
   listen  80;
@@ -59,13 +60,11 @@ server {
   ssl_certificate_key   /etc/letsencrypt/live/$sub.$DOMAIN_URL/privkey.pem;
   server_name $sub.$DOMAIN_URL;
   location / {
-		proxy_pass "http://$sub:8545";
+		proxy_pass "http://$sub:$port";
   }
 }
 EOF
 done
-
-# Hack way to implement variables in the nginx.conf file
 
 # periodically fork off & see if our certs need to be renewed
 function renewcerts {
