@@ -2,7 +2,7 @@
 
 Ethereum nodes with automatic subdomain ssl certs. This repo contains a docker compose file that starts the following services:
 - nginx proxy with ssl certs per subdomain/service that needs it
-- Goerli and Rinkeby tesnets. Additonal networks can be added by adding new services and new DNS subdomains `A` records.
+- Goerli and Rinkeby testnets. Additonal networks can be added by adding new services and new DNS subdomains `A` records.
 - Grafana service that monitors the ethereum nodes
 
 # Installation
@@ -18,7 +18,7 @@ Set the DNS `A` record for the subdomains that match the service names such as `
 ### Running
 
 ```
-make # to get
+make
 
 # Follow the promps. Make sure to include the ports that nginx needs to access:
 domain to register: sebas.tech
