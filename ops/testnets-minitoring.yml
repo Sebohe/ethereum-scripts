@@ -1,5 +1,8 @@
 version: "3.7"
 
+volumes:
+  grafana:
+
 services:
   goerli:
     entrypoint:
@@ -29,3 +32,4 @@ services:
       - prometheus
     volumes:
       - ./datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+      - grafana:/var/lib/grafana
