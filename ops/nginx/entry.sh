@@ -51,7 +51,9 @@ server {
   listen  80;
   server_name $sub.$DOMAIN_URL;
   location / {
-    return 301 https://\$host\$request_uri;
+    # Not using 301 because sometimes the certs don't work
+    # return 301 https://\$host\$request_uri;
+    proxy_pass "http://$sub:$port";
   }
 }
 
