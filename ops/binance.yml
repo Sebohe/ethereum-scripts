@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  tbinance:
+    environment:
+      NODETYPE: "lightnode"
+  binance:
+    environment:
+      BNET: "production"
+      NODETYPE: "lightnode"

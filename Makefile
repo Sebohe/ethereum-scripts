@@ -18,6 +18,10 @@ geth:
 	docker pull ethereum/client-go:$(gethVersion)
 	touch $(flags)/$@
 
+binance:
+	docker pull hashcloak/binance:lastest
+	touch $(flags)/$@
+
 config:
 	@read -p 'Domain to register: ' bridge; \
 		echo "DOMAIN_URL="$$bridge > config
@@ -46,6 +50,17 @@ monitoring-up: config nginx geth
 	docker stack deploy \
 	-c ops/ethereums-testnets.yml \
 	-c ops/testnets-minitoring.yml $(project)
+
+binance-up: binance
+	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
+	NGINX_IMAGE=$(nginx) \
+	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
+	EMAIL=$(shell cat config | grep CERTBOT_EMAIL | cut -f2 -d=) \
+	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
+	docker stack deploy \
+	-c ops/ethereums-testnets.yml \
+	-c ops/testnets-minitoring.yml \
+	-c ops/binance.yml $(project)
 
 down:
 	docker stack rm $(project)
