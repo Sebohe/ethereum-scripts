@@ -19,7 +19,7 @@ geth:
 	touch $(flags)/$@
 
 binance:
-	docker pull hashcloak/binance:lastest
+	docker pull hashcloak/binance:latest
 	touch $(flags)/$@
 
 config:
