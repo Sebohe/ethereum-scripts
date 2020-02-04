@@ -51,7 +51,7 @@ monitoring-up: config nginx geth
 	-c ops/ethereums-testnets.yml \
 	-c ops/testnets-minitoring.yml $(project)
 
-binance-up: binance
+binance-up: config binance nginx geth
 	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
 	NGINX_IMAGE=$(nginx) \
 	DOMAIN_URL=$(shell cat config | grep DOMAIN_URL | cut -f2 -d=) \
