@@ -49,7 +49,7 @@ monitoring-up: config nginx geth
 	SUBDOMAINS='$(shell cat config | grep SUBDOMAINS | cut -f2 -d=)' \
 	docker stack deploy \
 	-c ops/ethereums-testnets.yml \
-	-c ops/testnets-minitoring.yml $(project)
+	-c ops/testnets-monitoring.yml $(project)
 
 binance-up: config binance nginx geth
 	GETH_IMAGE=ethereum/client-go:$(gethVersion) \
