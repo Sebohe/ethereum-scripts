@@ -1,9 +1,0 @@
----
-- hosts: all
-  roles:
-    - common
-    - docker-install
-    - sshd
-    - ufw
-    - ipv4-forward
-    - ethereum-ssl-nginx
