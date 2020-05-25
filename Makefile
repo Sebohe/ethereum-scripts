@@ -1,4 +1,4 @@
-gethVersion=v1.9.9
+gethVersion=v1.9.15
 nginx=sebohe/nginx-eth:latest
 project=testnets
 
